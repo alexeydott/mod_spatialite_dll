@@ -1,0 +1,27 @@
+# AI context + research package, local only
+AGENTS.MD
+opencode.json
+.agents/
+.ai-factory/
+.ai-factory.json
+.claude/
+.codex/
+.github/
+.mcp.json
+.opencode/
+.qwen/
+.vscode/
+
+# Build artifacts
+build/
+out/
+*.user
+*.obj
+*.pdb
+*.exp
+
+# Source archives + extracted (download separately)
+src/
+
+*.json
+*.log
