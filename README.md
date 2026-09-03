@@ -1,15 +1,15 @@
 # Static MSVC Build of mod_spatialite.dll
 
-This directory contains an automated build of `mod_spatialite.dll` for `win32` and `win64` from the sources in `D:\projects\externals\spatialite\src`.
+This directory contains an automated build of `mod_spatialite.dll` for `win32` and `win64` from downloaded sources from `.\src`.
 
 ## Requirements
 
-- Visual Studio 2019 Build Tools:
+- Visual Studio 2019 Build Tools for example at:
   - `D:\VisualStudio2019\VC\Auxiliary\Build\vcvars32.bat`
   - `D:\VisualStudio2019\VC\Auxiliary\Build\vcvars64.bat`
 - `cmake` and `ninja` in `PATH`.
 - `python` and `perl` in `PATH`.
-- Tcl available at `D:\tools\tcl`; the script adds `D:\tools\tcl\bin` and `D:\tools\tcl` to `PATH` before invoking MSVC.
+- Tcl available for example at `D:\tools\tcl`; the script adds `D:\tools\tcl\bin` and `D:\tools\tcl` to `PATH` before invoking MSVC.
 
 ## Quick Build
 
@@ -35,16 +35,16 @@ powershell -ExecutionPolicy Bypass -File .\build-static-mod-spatialite.ps1 -Arch
 
 The script builds and installs the dependencies into intermediate directories:
 
-- `D:\projects\externals\spatialite\build\install\win32`
-- `D:\projects\externals\spatialite\build\install\win64`
+- `.\build\install\win32`
+- `.\build\install\win64`
 
 Then it publishes the final artifacts:
 
-- `D:\projects\externals\spatialite\bin\win32\mod_spatialite.dll`
-- `D:\projects\externals\spatialite\bin\win64\mod_spatialite.dll`
-- `D:\projects\externals\spatialite\lib\win32\*.lib`
-- `D:\projects\externals\spatialite\lib\win64\*.lib`
-- `D:\projects\externals\spatialite\include\*`
+- `.\bin\win32\mod_spatialite.dll`
+- `.\bin\win64\mod_spatialite.dll`
+- `.\lib\win32\*.lib`
+- `.\lib\win64\*.lib`
+- `.\include\*`
 
 All CMake projects are built with `CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded`, i.e. with `/MT`. Expat is additionally always rebuilt from a clean build directory with `EXPAT_MSVC_STATIC_CRT=ON` and `EXPAT_RELEASE_POSTFIX=MT` so it does not pick up a stale CMake cache with the `MD` postfix. The Gaia/MSVC makefile files are patched to use `/MT` and local staged-dependency paths.
 
@@ -68,8 +68,8 @@ For the MSVC configuration of `libspatialite` the script additionally enables `E
 
 After the build the script saves the `dumpbin /dependents` output:
 
-- `D:\projects\externals\spatialite\build\mod_spatialite-win32-dependents.txt`
-- `D:\projects\externals\spatialite\build\mod_spatialite-win64-dependents.txt`
+- `.\build\mod_spatialite-win32-dependents.txt`
+- `.\build\mod_spatialite-win64-dependents.txt`
 
 Expected result: no dependencies on `VCRUNTIME*.dll`, `MSVCP*.dll`, `ucrtbase.dll`, `sqlite3.dll`, `geos*.dll`, `proj*.dll`, `libxml2.dll`, `zlib.dll`, etc. Only system Windows DLLs are acceptable.
 
