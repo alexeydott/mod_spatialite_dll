@@ -31,16 +31,15 @@ function Invoke-Vc {
     }
     Push-Location $WorkingDirectory
     try {
-        $tclPrefix = ""
+        $savedPath = $env:PATH
         if (Test-Path $TclDir) {
-            $tclPrefix = "set PATH=$($TclDir)\bin;$($TclDir);%PATH%`r`n"
+            $env:PATH = "$($TclDir)\bin;$($TclDir);$savedPath"
         }
-        $batchFile = [System.IO.Path]::GetTempFileName()
-        Set-Content -Path $batchFile -Value "$tclPrefix`"$vc`"`r`n$Command" -Encoding ASCII
-        cmd.exe /d /c "$batchFile"
-        Remove-Item $batchFile -Force -ErrorAction SilentlyContinue
-        if ($LASTEXITCODE -ne 0) {
-            throw "Command failed for ${TargetArch}: $Command"
+        & cmd.exe /d /c "`"$vc`" && $Command"
+        $rc = $LASTEXITCODE
+        $env:PATH = $savedPath
+        if ($rc -ne 0) {
+            throw "Command failed (exit $rc) for ${TargetArch}: $Command"
         }
     }
     finally {
@@ -211,7 +210,7 @@ function Normalize-LibraryNames {
         $srcPath = Join-Path $lib $srcName
         $dstPath = Join-Path $lib $renames[$srcName]
         if ((Test-Path $srcPath) -and ($srcPath.ToLowerInvariant() -ne $dstPath.ToLowerInvariant())) {
-            Copy-Item $srcPath $dstPath -Force
+            Move-Item $srcPath $dstPath -Force
         }
     }
     $minizipInclude = Join-Path $prefix "include\minizip"
